@@ -82,7 +82,7 @@ fun MytosApp() {
         }
 
         // =========================
-        // CADASTRO
+        // CADASTRO vai
         // =========================
 
         composable(Rotas.Cadastro) {
