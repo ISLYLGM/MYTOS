@@ -46,8 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mytos.R
-import com.example.mytos.data.adicionarNaSacola
-import com.example.mytos.data.produtos
+import com.example.mytos.data.SacolaData
 import com.example.mytos.navigation.Rotas
 import com.example.mytos.ui.components.MytosBottomBar
 import com.example.mytos.ui.theme.MytosCream
@@ -59,7 +58,7 @@ import com.example.mytos.ui.theme.MytosText
 import com.example.mytos.ui.theme.MytosTextSecondary
 import com.example.mytos.ui.theme.MytosYellow
 import java.util.Locale
-
+import com.example.mytos.data.produtos
 
 @Composable
 fun HomeScreen(
@@ -820,48 +819,35 @@ private fun ProdutoDestaqueCard(
 
                 Text(
                     text = String.format(
-                        Locale("pt", "BR"),
+                        Locale.forLanguageTag("pt-BR"),
                         "R$ %.2f",
                         preco
                     ),
-
                     color = MytosPurple,
-
                     fontSize = 14.sp,
-
-                    fontWeight =
-                        FontWeight.Bold,
-
-                    modifier =
-                        Modifier.weight(1f)
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
                 )
-
 
                 IconButton(
                     onClick = {
-                        adicionarNaSacola(
-                            produtoId
-                        )
+                        val produtoEncontrado = produtos.find { it.id == produtoId }
+                        if (produtoEncontrado != null) {
+                            SacolaData.adicionarProduto(produtoEncontrado)
+                        }
                     },
-
                     modifier = Modifier
                         .size(34.dp)
                         .background(
-                            MytosPurple,
-                            CircleShape
+                            color = MytosPurple,
+                            shape = CircleShape
                         )
                 ) {
-
+                    // Aqui deve estar o Icon do botão, por exemplo:
                     Icon(
                         imageVector = Icons.Default.Add,
-
-                        contentDescription =
-                            "Adicionar à sacola",
-
-                        tint = Color.White,
-
-                        modifier =
-                            Modifier.size(21.dp)
+                        contentDescription = "Adicionar à sacola",
+                        tint = Color.White
                     )
                 }
             }

@@ -15,13 +15,15 @@ import androidx.compose.ui.unit.sp
 import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosYellow
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
-fun SplashScreen(onContinuar: () -> Unit) {
-
+fun SplashScreen(
+    onFinished: () -> Unit
+) {
     LaunchedEffect(Unit) {
-        delay(1500)
-        onContinuar()
+        delay(1500.milliseconds)
+        onFinished()
     }
 
     Column(

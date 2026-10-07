@@ -1,7 +1,6 @@
 package com.example.mytos.screens.login
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -43,12 +42,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import com.example.mytos.R
 import com.example.mytos.ui.theme.MytosCream
 import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosPurpleDark
 import com.example.mytos.ui.theme.MytosText
 import com.example.mytos.ui.theme.MytosTextSecondary
+
 
 @Composable
 fun LoginScreen(
@@ -344,11 +345,8 @@ fun LoginScreen(
                 onClick = {
                     val intent = Intent(
                         Intent.ACTION_VIEW,
-                        Uri.parse(
-                            "https://www.instagram.com/bia__e__bel/"
-                        )
+                        "https://www.instagram.com/bia__e__bel/".toUri()
                     )
-
                     context.startActivity(intent)
                 }
             ) {

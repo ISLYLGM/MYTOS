@@ -20,6 +20,7 @@ import com.example.mytos.screens.produto.ProdutoDetalhesScreen
 import com.example.mytos.screens.splash.SplashScreen
 import com.example.mytos.ui.theme.MytosTheme
 
+
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

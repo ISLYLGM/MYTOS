@@ -1,47 +1,45 @@
-package com.example.mytos.screens.splash
+package com.example.mytos.screens.sacola
 
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
+import com.example.mytos.data.SacolaData
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.mytos.R
+import com.example.mytos.model.ItemSacola
 import com.example.mytos.ui.theme.MytosTheme
+import java.util.Locale
 
 // Paleta do Splash
 private val PurpleTop = Color(0xFF3A1A63)
@@ -51,29 +49,15 @@ private val PurpleBottom = Color(0xFF1B0B33)
 private val Cream = Color(0xFFFBF3E4)
 private val ProgressPurple = Color(0xFF9B6DDB)
 
+// Locale correto para formato de moeda brasileira sem avisos de descontinuação
+private val localePtBR = Locale.forLanguageTag("pt-BR")
+
 @Composable
-fun SplashScreen(
-    onFinished: () -> Unit,
-    durationMillis: Int = 2500
+fun SacolaScreen(
+    onNavegarParaMeusPedidos: () -> Unit
 ) {
-    val progress = remember {
-        Animatable(0f)
-    }
-
-    val currentOnFinished = rememberUpdatedState(onFinished)
-
-    // Anima a barra de carregamento e depois segue para a próxima tela
-    LaunchedEffect(Unit) {
-        progress.animateTo(
-            targetValue = 1f,
-            animationSpec = tween(
-                durationMillis = durationMillis,
-                easing = LinearEasing
-            )
-        )
-
-        currentOnFinished.value()
-    }
+    val itens = SacolaData.itensSacola
+    val valorTotal = SacolaData.calcularTotal()
 
     Box(
         modifier = Modifier
@@ -88,7 +72,6 @@ fun SplashScreen(
                 )
             )
     ) {
-
         // Montanhas decorativas ao fundo
         Canvas(
             modifier = Modifier.fillMaxSize()
@@ -132,88 +115,178 @@ fun SplashScreen(
             )
         }
 
+        // Conteúdo da Tela da Sacola
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .statusBarsPadding()
                 .navigationBarsPadding()
-                .padding(horizontal = 32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
-
-            // Logo MYTOS
-            Image(
-                painter = painterResource(
-                    id = R.drawable.mytos_logo_white
-                ),
-                contentDescription = "MYTOS, logo do café inspirado em mitologias",
-                modifier = Modifier.size(260.dp)
-            )
-
-            Spacer(
-                modifier = Modifier.height(20.dp)
-            )
-
-            // Frase do aplicativo
             Text(
-                text = "Café, sabor e lendas\nem cada gole.",
+                text = "Minha Sacola",
                 color = Cream,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Medium,
-                lineHeight = 26.sp,
-                textAlign = TextAlign.Center
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            Spacer(
-                modifier = Modifier.weight(1f)
-            )
-
-            // Área de carregamento
-            Column(
-                modifier = Modifier.semantics(
-                    mergeDescendants = true
-                ) {
-                    contentDescription = "Carregando o aplicativo"
-                    liveRegion = LiveRegionMode.Polite
-                },
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                LinearProgressIndicator(
-                    progress = {
-                        progress.value
-                    },
+            if (itens.isEmpty()) {
+                Box(
                     modifier = Modifier
-                        .width(150.dp)
-                        .height(6.dp)
-                        .clip(
-                            RoundedCornerShape(50)
-                        ),
-                    color = ProgressPurple,
-                    trackColor = Color.White.copy(alpha = 0.18f),
-                    strokeCap = StrokeCap.Round,
-                    gapSize = 0.dp,
-                    drawStopIndicator = {}
-                )
+                        .weight(1f)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Sua sacola está vazia.",
+                        color = Cream.copy(alpha = 0.7f),
+                        fontSize = 16.sp
+                    )
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(itens, key = { it.produto.id }) { item ->
+                        SacolaItemCard(
+                            itemSacola = item,
+                            onAumentar = { SacolaData.aumentarQuantidade(item.produto.id) },
+                            onDiminuir = { SacolaData.diminuirQuantidade(item.produto.id) }
+                        )
+                    }
+                }
 
-                Spacer(
-                    modifier = Modifier.height(10.dp)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Card de Resumo do Pedido e Botão
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = PurpleMid.copy(alpha = 0.9f)
+                    ),
+                    shape = RoundedCornerShape(16.dp),
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Valor Total",
+                                color = Cream,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = String.format(localePtBR, "R$ %.2f", valorTotal),
+                                color = Cream,
+                                fontSize = 18.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Button(
+                            onClick = {
+                                val pedidoCriado = SacolaData.finalizarPedido()
+                                if (pedidoCriado != null) {
+                                    onNavegarParaMeusPedidos()
+                                }
+                            },
+                            colors = ButtonDefaults.buttonColors(containerColor = ProgressPurple),
+                            shape = RoundedCornerShape(12.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp)
+                        ) {
+                            Text(
+                                text = "Finalizar pedido",
+                                color = Cream,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SacolaItemCard(
+    itemSacola: ItemSacola,
+    onAumentar: () -> Unit,
+    onDiminuir: () -> Unit
+) {
+    val produto = itemSacola.produto
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics {
+                contentDescription = "Item ${produto.nome}, quantidade ${itemSacola.quantidade}"
+            },
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White.copy(alpha = 0.08f)
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                Text(
+                    text = produto.nome,
+                    color = Cream,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold
                 )
 
                 Text(
-                    text = "Carregando...",
+                    text = String.format(localePtBR, "Preço: R$ %.2f", produto.preco),
                     color = Cream.copy(alpha = 0.7f),
-                    fontSize = 12.sp
+                    fontSize = 14.sp
+                )
+
+                Text(
+                    text = String.format(localePtBR, "Subtotal: R$ %.2f", itemSacola.subtotal),
+                    color = ProgressPurple,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.SemiBold
                 )
             }
 
-            Spacer(
-                modifier = Modifier.height(28.dp)
-            )
+            // Controles de Quantidade (+ / −)
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                IconButton(onClick = onDiminuir, modifier = Modifier.size(36.dp)) {
+                    Text(text = "−", color = Cream, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                }
+
+                Text(
+                    text = "${itemSacola.quantidade}",
+                    color = Cream,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center
+                )
+
+                IconButton(onClick = onAumentar, modifier = Modifier.size(36.dp)) {
+                    Text(text = "+", color = Cream, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+                }
+            }
         }
     }
 }
@@ -223,10 +296,10 @@ fun SplashScreen(
     showSystemUi = true
 )
 @Composable
-fun SplashScreenPreview() {
+fun SacolaScreenPreview() {
     MytosTheme {
-        SplashScreen(
-            onFinished = {}
+        SacolaScreen(
+            onNavegarParaMeusPedidos = {}
         )
     }
 }

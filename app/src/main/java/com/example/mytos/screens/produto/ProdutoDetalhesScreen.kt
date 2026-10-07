@@ -19,7 +19,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.ShoppingBag
 import androidx.compose.material3.Button
@@ -37,9 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.data.adicionarNaSacola
 import com.example.mytos.data.produtos
 import java.util.Locale
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import com.example.mytos.data.SacolaData
+
 
 
 // =============================================================
@@ -61,6 +63,9 @@ private val LilasCard = Color(0xFFF6EFF8)
 private val Amarelo = Color(0xFFF5D77A)
 
 private val VerdeClaro = Color(0xFFE5F2D8)
+
+// Locale correto sem aviso de deprecation
+private val localePtBR = Locale.forLanguageTag("pt-BR")
 
 
 // =============================================================
@@ -156,7 +161,6 @@ fun ProdutoDetalhesScreen(
 
             // =====================================================
             // CONTAINER ROXO
-            // ALTURA DEFINIDA PELO USUÁRIO: 250 DP
             // =====================================================
 
             Box(
@@ -199,7 +203,7 @@ fun ProdutoDetalhesScreen(
                     ) {
 
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Voltar",
                             tint = Color.White,
                             modifier = Modifier.size(27.dp)
@@ -246,7 +250,6 @@ fun ProdutoDetalhesScreen(
 
                 // =================================================
                 // CÍRCULO EXTERNO
-                // PEQUENO PARA CABER NO TOPO DE 250DP
                 // =================================================
 
                 Box(
@@ -499,10 +502,6 @@ fun ProdutoDetalhesScreen(
                         Alignment.CenterVertically
                 ) {
 
-                    // =============================================
-                    // ÍCONE
-                    // =============================================
-
                     Box(
                         modifier = Modifier
                             .size(43.dp)
@@ -582,10 +581,6 @@ fun ProdutoDetalhesScreen(
                         Arrangement.SpaceBetween
                 ) {
 
-                    // =============================================
-                    // PREÇO
-                    // =============================================
-
                     Column {
 
                         Text(
@@ -604,10 +599,7 @@ fun ProdutoDetalhesScreen(
 
                         Text(
                             text = String.format(
-                                Locale(
-                                    "pt",
-                                    "BR"
-                                ),
+                                localePtBR,
                                 "R$ %.2f",
                                 produto.preco
                             ),
@@ -622,14 +614,12 @@ fun ProdutoDetalhesScreen(
 
 
                     // =============================================
-                    // BOTÃO ADICIONAR
+                    // BOTÃO ADICIONAR NA SACOLA
                     // =============================================
 
                     Button(
                         onClick = {
-                            adicionarNaSacola(
-                                produto.id
-                            )
+                            SacolaData.adicionarProduto(produto)
                         },
 
                         modifier = Modifier
@@ -642,7 +632,7 @@ fun ProdutoDetalhesScreen(
                             containerColor = Roxo
                         ),
 
-                        contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                        contentPadding = PaddingValues(
                             horizontal = 14.dp
                         )
                     ) {
