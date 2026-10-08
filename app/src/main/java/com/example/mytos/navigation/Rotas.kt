@@ -14,4 +14,6 @@ object Rotas {
 
     const val ProdutoDetalhes = "produto/{produtoId}"
 
+    const val Pedidos = "pedidos"
+    const val PedidoDetalhes = "pedido/{pedidoId}"
 }

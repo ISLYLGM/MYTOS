@@ -20,14 +20,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Restaurant
-import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +39,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -47,14 +52,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.mytos.data.produtos
 import com.example.mytos.model.Produto
-import com.example.mytos.navigation.Rotas
 import com.example.mytos.ui.components.MytosBottomBar
 import com.example.mytos.ui.theme.MytosCream
 import com.example.mytos.ui.theme.MytosLilac
@@ -75,6 +82,14 @@ fun CardapioScreen(
         mutableStateOf(false)
     }
 
+    var mostrarDialogoEdicao by remember {
+        mutableStateOf(false)
+    }
+
+    var produtoParaEditar by remember {
+        mutableStateOf<Produto?>(null)
+    }
+
     var busca by remember {
         mutableStateOf("")
     }
@@ -90,19 +105,28 @@ fun CardapioScreen(
     val produtosFiltrados = produtos.filter { produto ->
 
         val correspondeBusca =
-            produto.nome.contains(busca, ignoreCase = true) ||
-                    produto.descricao.contains(busca, ignoreCase = true)
+            produto.nome.contains(
+                busca,
+                ignoreCase = true
+            ) ||
+                    produto.descricao.contains(
+                        busca,
+                        ignoreCase = true
+                    )
 
         val correspondeCategoria =
             when (categoriaSelecionada) {
 
                 "Todos" -> true
 
-                "Bebidas" -> produto.categoriaId == 1
+                "Bebidas" ->
+                    produto.categoriaId == 1
 
-                "Doces" -> produto.categoriaId == 2
+                "Doces" ->
+                    produto.categoriaId == 2
 
-                "Salgados" -> produto.categoriaId == 3
+                "Salgados" ->
+                    produto.categoriaId == 3
 
                 else -> true
             }
@@ -114,12 +138,13 @@ fun CardapioScreen(
     // TELA
     // ---------------------------------------------------------
 
-    androidx.compose.material3.Scaffold(
+    Scaffold(
         containerColor = MytosCream,
 
         bottomBar = {
             MytosBottomBar(navController)
         }
+
     ) { paddingValues ->
 
         LazyColumn(
@@ -132,7 +157,8 @@ fun CardapioScreen(
                 bottom = 24.dp
             ),
 
-            verticalArrangement = Arrangement.spacedBy(0.dp)
+            verticalArrangement =
+                Arrangement.spacedBy(0.dp)
         ) {
 
             // =================================================
@@ -153,7 +179,9 @@ fun CardapioScreen(
                         .clip(
                             RoundedCornerShape(26.dp)
                         )
-                        .background(MytosPurpleDark)
+                        .background(
+                            MytosPurpleDark
+                        )
                 ) {
 
                     Column(
@@ -167,71 +195,104 @@ fun CardapioScreen(
                             )
                     ) {
 
-                        // -----------------------------------------
-                        // LINHA SUPERIOR
-                        // -----------------------------------------
-
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically
+                            modifier =
+                                Modifier.fillMaxWidth(),
+
+                            verticalAlignment =
+                                Alignment.CenterVertically
                         ) {
 
                             Column(
-                                modifier = Modifier.weight(1f)
+                                modifier =
+                                    Modifier.weight(1f)
                             ) {
 
                                 Text(
-                                    text = "MYTOS • CAFÉ E MITOLOGIA",
-                                    color = MytosYellow,
+                                    text =
+                                        "MYTOS • CAFÉ E MITOLOGIA",
+
+                                    color =
+                                        MytosYellow,
+
                                     fontSize = 9.sp,
-                                    fontWeight = FontWeight.Bold,
-                                    letterSpacing = 0.8.sp
+
+                                    fontWeight =
+                                        FontWeight.Bold,
+
+                                    letterSpacing =
+                                        0.8.sp
                                 )
 
                                 Spacer(
-                                    modifier = Modifier.height(5.dp)
+                                    modifier =
+                                        Modifier.height(5.dp)
                                 )
 
                                 Text(
-                                    text = "Nosso cardápio",
-                                    color = Color.White,
+                                    text =
+                                        "Nosso cardápio",
+
+                                    color =
+                                        Color.White,
+
                                     fontSize = 24.sp,
-                                    fontWeight = FontWeight.ExtraBold
+
+                                    fontWeight =
+                                        FontWeight.ExtraBold
                                 )
                             }
 
-                            // -------------------------------------
+                            // ---------------------------------
                             // BOTÃO +
-                            // -------------------------------------
+                            // ---------------------------------
 
                             IconButton(
                                 onClick = {
                                     mostrarDialogo = true
                                 },
+
                                 modifier = Modifier
                                     .size(48.dp)
                                     .background(
-                                        color = MytosYellow,
-                                        shape = CircleShape
+                                        color =
+                                            MytosYellow,
+
+                                        shape =
+                                            CircleShape
                                     )
                             ) {
 
                                 Icon(
-                                    imageVector = Icons.Default.Add,
-                                    contentDescription = "Adicionar novo produto",
-                                    tint = MytosPurpleDark,
-                                    modifier = Modifier.size(28.dp)
+                                    imageVector =
+                                        Icons.Default.Add,
+
+                                    contentDescription =
+                                        "Adicionar novo produto",
+
+                                    tint =
+                                        MytosPurpleDark,
+
+                                    modifier =
+                                        Modifier.size(28.dp)
                                 )
                             }
                         }
 
                         Spacer(
-                            modifier = Modifier.height(5.dp)
+                            modifier =
+                                Modifier.height(5.dp)
                         )
 
                         Text(
-                            text = "Escolha sua próxima história para saborear.",
-                            color = Color.White.copy(alpha = 0.78f),
+                            text =
+                                "Escolha sua próxima história para saborear.",
+
+                            color =
+                                Color.White.copy(
+                                    alpha = 0.78f
+                                ),
+
                             fontSize = 12.sp
                         )
                     }
@@ -245,48 +306,74 @@ fun CardapioScreen(
             item {
 
                 Spacer(
-                    modifier = Modifier.height(14.dp)
+                    modifier =
+                        Modifier.height(14.dp)
                 )
 
                 OutlinedTextField(
                     value = busca,
+
                     onValueChange = {
                         busca = it
                     },
 
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 14.dp)
+                        .padding(
+                            horizontal = 14.dp
+                        )
                         .height(54.dp),
 
                     singleLine = true,
 
                     placeholder = {
                         Text(
-                            text = "O que você deseja saborear?",
-                            color = MytosTextSecondary,
+                            text =
+                                "O que você deseja saborear?",
+
+                            color =
+                                MytosTextSecondary,
+
                             fontSize = 13.sp
                         )
                     },
 
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = "Buscar",
-                            tint = MytosPurple
+                            imageVector =
+                                Icons.Default.Search,
+
+                            contentDescription =
+                                "Buscar",
+
+                            tint =
+                                MytosPurple
                         )
                     },
 
-                    shape = RoundedCornerShape(17.dp),
+                    shape =
+                        RoundedCornerShape(17.dp),
 
-                    colors = androidx.compose.material3.OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = MytosPurple,
-                        unfocusedBorderColor = MytosLilac,
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
-                        focusedTextColor = MytosText,
-                        unfocusedTextColor = MytosText
-                    )
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText
+                        )
                 )
             }
 
@@ -297,19 +384,30 @@ fun CardapioScreen(
             item {
 
                 Spacer(
-                    modifier = Modifier.height(18.dp)
+                    modifier =
+                        Modifier.height(18.dp)
                 )
 
                 Text(
                     text = "Categorias",
-                    color = MytosPurpleDark,
+
+                    color =
+                        MytosPurpleDark,
+
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(horizontal = 14.dp)
+
+                    fontWeight =
+                        FontWeight.Bold,
+
+                    modifier =
+                        Modifier.padding(
+                            horizontal = 14.dp
+                        )
                 )
 
                 Spacer(
-                    modifier = Modifier.height(8.dp)
+                    modifier =
+                        Modifier.height(8.dp)
                 )
 
                 Row(
@@ -318,7 +416,9 @@ fun CardapioScreen(
                         .horizontalScroll(
                             rememberScrollState()
                         )
-                        .padding(horizontal = 14.dp),
+                        .padding(
+                            horizontal = 14.dp
+                        ),
 
                     horizontalArrangement =
                         Arrangement.spacedBy(8.dp)
@@ -326,41 +426,65 @@ fun CardapioScreen(
 
                     CategoriaFiltro(
                         nome = "Todos",
+
                         selecionada =
-                            categoriaSelecionada == "Todos",
-                        icon = Icons.Default.Category,
+                            categoriaSelecionada ==
+                                    "Todos",
+
+                        icon =
+                            Icons.Default.Category,
+
                         onClick = {
-                            categoriaSelecionada = "Todos"
+                            categoriaSelecionada =
+                                "Todos"
                         }
                     )
 
                     CategoriaFiltro(
                         nome = "Bebidas",
+
                         selecionada =
-                            categoriaSelecionada == "Bebidas",
-                        icon = Icons.Default.Coffee,
+                            categoriaSelecionada ==
+                                    "Bebidas",
+
+                        icon =
+                            Icons.Default.Coffee,
+
                         onClick = {
-                            categoriaSelecionada = "Bebidas"
+                            categoriaSelecionada =
+                                "Bebidas"
                         }
                     )
 
                     CategoriaFiltro(
                         nome = "Doces",
+
                         selecionada =
-                            categoriaSelecionada == "Doces",
-                        icon = Icons.Default.Cake,
+                            categoriaSelecionada ==
+                                    "Doces",
+
+                        icon =
+                            Icons.Default.Cake,
+
                         onClick = {
-                            categoriaSelecionada = "Doces"
+                            categoriaSelecionada =
+                                "Doces"
                         }
                     )
 
                     CategoriaFiltro(
                         nome = "Salgados",
+
                         selecionada =
-                            categoriaSelecionada == "Salgados",
-                        icon = Icons.Default.Restaurant,
+                            categoriaSelecionada ==
+                                    "Salgados",
+
+                        icon =
+                            Icons.Default.Restaurant,
+
                         onClick = {
-                            categoriaSelecionada = "Salgados"
+                            categoriaSelecionada =
+                                "Salgados"
                         }
                     )
                 }
@@ -373,33 +497,51 @@ fun CardapioScreen(
             item {
 
                 Spacer(
-                    modifier = Modifier.height(22.dp)
+                    modifier =
+                        Modifier.height(22.dp)
                 )
 
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(
+                            horizontal = 14.dp
+                        ),
+
+                    verticalAlignment =
+                        Alignment.CenterVertically
                 ) {
 
                     Text(
-                        text = "Todos os sabores",
-                        color = MytosPurpleDark,
+                        text =
+                            "Todos os sabores",
+
+                        color =
+                            MytosPurpleDark,
+
                         fontSize = 18.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.weight(1f)
+
+                        fontWeight =
+                            FontWeight.ExtraBold,
+
+                        modifier =
+                            Modifier.weight(1f)
                     )
 
                     Text(
-                        text = "${produtosFiltrados.size} opções",
-                        color = MytosTextSecondary,
+                        text =
+                            "${produtosFiltrados.size} opções",
+
+                        color =
+                            MytosTextSecondary,
+
                         fontSize = 11.sp
                     )
                 }
 
                 Spacer(
-                    modifier = Modifier.height(12.dp)
+                    modifier =
+                        Modifier.height(12.dp)
                 )
             }
 
@@ -409,22 +551,37 @@ fun CardapioScreen(
 
             items(
                 items = produtosFiltrados,
+
                 key = {
                     it.id
                 }
+
             ) { produto ->
 
                 ProdutoCardMytos(
                     produto = produto,
 
                     onClick = {
+
                         navController.navigate(
                             "produto/${produto.id}"
                         )
                     },
 
+                    onEdit = {
+
+                        produtoParaEditar =
+                            produto
+
+                        mostrarDialogoEdicao =
+                            true
+                    },
+
                     onDelete = {
-                        produtos.remove(produto)
+
+                        produtos.remove(
+                            produto
+                        )
                     }
                 )
             }
@@ -444,35 +601,57 @@ fun CardapioScreen(
                                 horizontal = 30.dp,
                                 vertical = 50.dp
                             ),
+
                         horizontalAlignment =
                             Alignment.CenterHorizontally
                     ) {
 
                         Icon(
-                            imageVector = Icons.Default.Coffee,
-                            contentDescription = null,
-                            tint = MytosPurple.copy(alpha = 0.4f),
-                            modifier = Modifier.size(50.dp)
+                            imageVector =
+                                Icons.Default.Coffee,
+
+                            contentDescription =
+                                null,
+
+                            tint =
+                                MytosPurple.copy(
+                                    alpha = 0.4f
+                                ),
+
+                            modifier =
+                                Modifier.size(50.dp)
                         )
 
                         Spacer(
-                            modifier = Modifier.height(12.dp)
+                            modifier =
+                                Modifier.height(12.dp)
                         )
 
                         Text(
-                            text = "Nenhum sabor encontrado",
-                            color = MytosPurpleDark,
+                            text =
+                                "Nenhum sabor encontrado",
+
+                            color =
+                                MytosPurpleDark,
+
                             fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold
+
+                            fontWeight =
+                                FontWeight.Bold
                         )
 
                         Spacer(
-                            modifier = Modifier.height(5.dp)
+                            modifier =
+                                Modifier.height(5.dp)
                         )
 
                         Text(
-                            text = "Tente outra busca ou categoria.",
-                            color = MytosTextSecondary,
+                            text =
+                                "Tente outra busca ou categoria.",
+
+                            color =
+                                MytosTextSecondary,
+
                             fontSize = 13.sp
                         )
                     }
@@ -488,26 +667,86 @@ fun CardapioScreen(
     if (mostrarDialogo) {
 
         NovoProdutoDialog(
+
             onDismiss = {
-                mostrarDialogo = false
+                mostrarDialogo =
+                    false
             },
 
-            onAdicionar = { nome, descricao, preco, categoriaId ->
+            onAdicionar = {
+                    nome,
+                    descricao,
+                    preco,
+                    categoriaId ->
 
                 val novoId =
-                    (produtos.maxOfOrNull { it.id } ?: 0) + 1
+                    (produtos.maxOfOrNull {
+                        it.id
+                    } ?: 0) + 1
 
                 produtos.add(
                     Produto(
                         id = novoId,
+
                         nome = nome,
+
                         descricao = descricao,
+
                         preco = preco,
-                        categoriaId = categoriaId
+
+                        categoriaId =
+                            categoriaId
                     )
                 )
 
-                mostrarDialogo = false
+                mostrarDialogo =
+                    false
+            }
+        )
+    }
+
+    // =========================================================
+    // DIALOGO DE EDIÇÃO
+    // =========================================================
+
+    if (mostrarDialogoEdicao &&
+        produtoParaEditar != null
+    ) {
+
+        EditarProdutoDialog(
+
+            produto =
+                produtoParaEditar!!,
+
+            onDismiss = {
+
+                mostrarDialogoEdicao =
+                    false
+
+                produtoParaEditar =
+                    null
+            },
+
+            onSalvar = {
+                    produtoAtualizado ->
+
+                val index =
+                    produtos.indexOfFirst {
+                        it.id ==
+                                produtoAtualizado.id
+                    }
+
+                if (index != -1) {
+
+                    produtos[index] =
+                        produtoAtualizado
+                }
+
+                mostrarDialogoEdicao =
+                    false
+
+                produtoParaEditar =
+                    null
             }
         )
     }
@@ -544,33 +783,46 @@ private fun CategoriaFiltro(
                 vertical = 9.dp
             ),
 
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment =
+            Alignment.CenterVertically
     ) {
 
         Icon(
             imageVector = icon,
-            contentDescription = null,
-            tint = if (selecionada) {
-                Color.White
-            } else {
-                MytosPurple
-            },
-            modifier = Modifier.size(15.dp)
+
+            contentDescription =
+                null,
+
+            tint =
+                if (selecionada) {
+                    Color.White
+                } else {
+                    MytosPurple
+                },
+
+            modifier =
+                Modifier.size(15.dp)
         )
 
         Spacer(
-            modifier = Modifier.width(5.dp)
+            modifier =
+                Modifier.width(5.dp)
         )
 
         Text(
             text = nome,
-            color = if (selecionada) {
-                Color.White
-            } else {
-                MytosText
-            },
+
+            color =
+                if (selecionada) {
+                    Color.White
+                } else {
+                    MytosText
+                },
+
             fontSize = 11.sp,
-            fontWeight = FontWeight.Bold
+
+            fontWeight =
+                FontWeight.Bold
         )
     }
 }
@@ -584,6 +836,7 @@ private fun CategoriaFiltro(
 private fun ProdutoCardMytos(
     produto: Produto,
     onClick: () -> Unit,
+    onEdit: () -> Unit,
     onDelete: () -> Unit
 ) {
 
@@ -598,22 +851,29 @@ private fun ProdutoCardMytos(
                 onClick()
             },
 
-        shape = RoundedCornerShape(20.dp),
+        shape =
+            RoundedCornerShape(20.dp),
 
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
+        colors =
+            CardDefaults.cardColors(
+                containerColor =
+                    Color.White
+            ),
 
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        )
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation =
+                    2.dp
+            )
     ) {
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically
+
+            verticalAlignment =
+                Alignment.CenterVertically
         ) {
 
             // -------------------------------------------------
@@ -623,10 +883,15 @@ private fun ProdutoCardMytos(
             Box(
                 modifier = Modifier
                     .size(88.dp)
-                    .clip(RoundedCornerShape(17.dp))
-                    .background(MytosLilacLight),
+                    .clip(
+                        RoundedCornerShape(17.dp)
+                    )
+                    .background(
+                        MytosLilacLight
+                    ),
 
-                contentAlignment = Alignment.Center
+                contentAlignment =
+                    Alignment.Center
             ) {
 
                 Box(
@@ -637,29 +902,39 @@ private fun ProdutoCardMytos(
                             CircleShape
                         ),
 
-                    contentAlignment = Alignment.Center
+                    contentAlignment =
+                        Alignment.Center
                 ) {
 
                     Icon(
-                        imageVector = if (
-                            produto.categoriaId == 2
-                        ) {
-                            Icons.Default.Cake
-                        } else {
-                            Icons.Default.Coffee
-                        },
+                        imageVector =
+                            if (
+                                produto.categoriaId ==
+                                2
+                            ) {
 
-                        contentDescription = null,
+                                Icons.Default.Cake
 
-                        tint = MytosPurple,
+                            } else {
 
-                        modifier = Modifier.size(24.dp)
+                                Icons.Default.Coffee
+                            },
+
+                        contentDescription =
+                            null,
+
+                        tint =
+                            MytosPurple,
+
+                        modifier =
+                            Modifier.size(24.dp)
                     )
                 }
             }
 
             Spacer(
-                modifier = Modifier.width(12.dp)
+                modifier =
+                    Modifier.width(12.dp)
             )
 
             // -------------------------------------------------
@@ -667,49 +942,105 @@ private fun ProdutoCardMytos(
             // -------------------------------------------------
 
             Column(
-                modifier = Modifier.weight(1f)
+                modifier =
+                    Modifier.weight(1f)
             ) {
 
                 Text(
-                    text = produto.nome,
-                    color = MytosPurpleDark,
+                    text =
+                        produto.nome,
+
+                    color =
+                        MytosPurpleDark,
+
                     fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
+
+                    fontWeight =
+                        FontWeight.Bold,
+
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+
+                    overflow =
+                        TextOverflow.Ellipsis
                 )
 
                 Spacer(
-                    modifier = Modifier.height(4.dp)
+                    modifier =
+                        Modifier.height(4.dp)
                 )
 
                 Text(
-                    text = produto.descricao,
-                    color = MytosTextSecondary,
+                    text =
+                        produto.descricao,
+
+                    color =
+                        MytosTextSecondary,
+
                     fontSize = 11.sp,
+
                     lineHeight = 15.sp,
+
                     maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+
+                    overflow =
+                        TextOverflow.Ellipsis
                 )
 
                 Spacer(
-                    modifier = Modifier.height(7.dp)
+                    modifier =
+                        Modifier.height(7.dp)
                 )
 
                 Text(
-                    text = String.format(
-                        Locale("pt", "BR"),
-                        "R$ %.2f",
-                        produto.preco
-                    ),
-                    color = MytosPurple,
+                    text =
+                        String.format(
+                            Locale(
+                                "pt",
+                                "BR"
+                            ),
+
+                            "R$ %.2f",
+
+                            produto.preco
+                        ),
+
+                    color =
+                        MytosPurple,
+
                     fontSize = 14.sp,
-                    fontWeight = FontWeight.ExtraBold
+
+                    fontWeight =
+                        FontWeight.ExtraBold
                 )
             }
 
             // -------------------------------------------------
-            // LIXEIRA
+            // EDITAR
+            // -------------------------------------------------
+
+            IconButton(
+                onClick = {
+                    onEdit()
+                }
+            ) {
+
+                Icon(
+                    imageVector =
+                        Icons.Default.Edit,
+
+                    contentDescription =
+                        "Editar ${produto.nome}",
+
+                    tint =
+                        MytosPurple,
+
+                    modifier =
+                        Modifier.size(20.dp)
+                )
+            }
+
+            // -------------------------------------------------
+            // EXCLUIR
             // -------------------------------------------------
 
             IconButton(
@@ -719,10 +1050,19 @@ private fun ProdutoCardMytos(
             ) {
 
                 Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Remover ${produto.nome}",
-                    tint = MytosTextSecondary.copy(alpha = 0.55f),
-                    modifier = Modifier.size(21.dp)
+                    imageVector =
+                        Icons.Default.Delete,
+
+                    contentDescription =
+                        "Remover ${produto.nome}",
+
+                    tint =
+                        MytosTextSecondary.copy(
+                            alpha = 0.55f
+                        ),
+
+                    modifier =
+                        Modifier.size(21.dp)
                 )
             }
         }
@@ -737,6 +1077,7 @@ private fun ProdutoCardMytos(
 @Composable
 private fun NovoProdutoDialog(
     onDismiss: () -> Unit,
+
     onAdicionar: (
         String,
         String,
@@ -761,14 +1102,36 @@ private fun NovoProdutoDialog(
         mutableStateOf(1)
     }
 
+    var erroNome by remember {
+        mutableStateOf(false)
+    }
+
+    var erroDescricao by remember {
+        mutableStateOf(false)
+    }
+
+    var erroPreco by remember {
+        mutableStateOf(false)
+    }
+
+    val focusManager =
+        LocalFocusManager.current
+
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest =
+            onDismiss,
 
         title = {
+
             Text(
-                text = "Novo produto",
-                color = MytosPurpleDark,
-                fontWeight = FontWeight.ExtraBold
+                text =
+                    "Novo produto",
+
+                color =
+                    MytosPurpleDark,
+
+                fontWeight =
+                    FontWeight.ExtraBold
             )
         },
 
@@ -776,64 +1139,367 @@ private fun NovoProdutoDialog(
 
             Column {
 
+                // =================================================
+                // NOME
+                // =================================================
+
                 OutlinedTextField(
                     value = nome,
+
                     onValueChange = {
+
                         nome = it
+
+                        erroNome = false
                     },
-                    modifier = Modifier.fillMaxWidth(),
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
                     singleLine = true,
+
                     label = {
-                        Text("Nome do produto")
-                    }
+                        Text(
+                            text =
+                                "Nome do produto"
+                        )
+                    },
+
+                    isError =
+                        erroNome,
+
+                    supportingText = {
+
+                        if (erroNome) {
+
+                            Text(
+                                text =
+                                    "Digite o nome do produto.",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
                 )
 
                 Spacer(
-                    modifier = Modifier.height(10.dp)
+                    modifier =
+                        Modifier.height(10.dp)
                 )
 
+                // =================================================
+                // DESCRIÇÃO
+                // =================================================
+
                 OutlinedTextField(
-                    value = descricao,
+                    value =
+                        descricao,
+
                     onValueChange = {
+
                         descricao = it
+
+                        erroDescricao = false
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    minLines = 2,
-                    maxLines = 3,
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
+                    singleLine = true,
+
                     label = {
-                        Text("Descrição")
-                    }
+                        Text(
+                            text =
+                                "Descrição"
+                        )
+                    },
+
+                    isError =
+                        erroDescricao,
+
+                    supportingText = {
+
+                        if (erroDescricao) {
+
+                            Text(
+                                text =
+                                    "Digite uma descrição.",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
                 )
 
                 Spacer(
-                    modifier = Modifier.height(10.dp)
+                    modifier =
+                        Modifier.height(10.dp)
                 )
+
+                // =================================================
+                // PREÇO
+                // =================================================
 
                 OutlinedTextField(
-                    value = preco,
-                    onValueChange = {
-                        preco = it
+                    value =
+                        preco,
+
+                    onValueChange = { novoValor ->
+
+                        preco =
+                            novoValor.filter {
+
+                                it.isDigit() ||
+                                        it == ',' ||
+                                        it == '.'
+                            }
+
+                        erroPreco = false
                     },
-                    modifier = Modifier.fillMaxWidth(),
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
                     singleLine = true,
+
                     label = {
-                        Text("Preço")
-                    }
+                        Text(
+                            text =
+                                "Preço"
+                        )
+                    },
+
+                    isError =
+                        erroPreco,
+
+                    supportingText = {
+
+                        if (erroPreco) {
+
+                            Text(
+                                text =
+                                    "Digite um preço válido. Ex.: 14,90",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType =
+                                KeyboardType.Decimal,
+
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
                 )
 
                 Spacer(
-                    modifier = Modifier.height(16.dp)
+                    modifier =
+                        Modifier.height(16.dp)
                 )
+
+                // =================================================
+                // CATEGORIA
+                // =================================================
 
                 Text(
-                    text = "Categoria",
-                    color = MytosPurpleDark,
+                    text =
+                        "Categoria",
+
+                    color =
+                        MytosPurpleDark,
+
                     fontSize = 13.sp,
-                    fontWeight = FontWeight.Bold
+
+                    fontWeight =
+                        FontWeight.Bold
                 )
 
                 Spacer(
-                    modifier = Modifier.height(8.dp)
+                    modifier =
+                        Modifier.height(8.dp)
                 )
 
                 Row(
@@ -842,39 +1508,59 @@ private fun NovoProdutoDialog(
                         .horizontalScroll(
                             rememberScrollState()
                         ),
+
                     horizontalArrangement =
                         Arrangement.spacedBy(7.dp)
                 ) {
 
                     CategoriaDialogButton(
-                        nome = "Bebidas",
+                        nome =
+                            "Bebidas",
+
                         selecionada =
-                            categoriaSelecionada == 1,
+                            categoriaSelecionada ==
+                                    1,
+
                         onClick = {
-                            categoriaSelecionada = 1
+                            categoriaSelecionada =
+                                1
                         }
                     )
 
                     CategoriaDialogButton(
-                        nome = "Doces",
+                        nome =
+                            "Doces",
+
                         selecionada =
-                            categoriaSelecionada == 2,
+                            categoriaSelecionada ==
+                                    2,
+
                         onClick = {
-                            categoriaSelecionada = 2
+                            categoriaSelecionada =
+                                2
                         }
                     )
 
                     CategoriaDialogButton(
-                        nome = "Salgados",
+                        nome =
+                            "Salgados",
+
                         selecionada =
-                            categoriaSelecionada == 3,
+                            categoriaSelecionada ==
+                                    3,
+
                         onClick = {
-                            categoriaSelecionada = 3
+                            categoriaSelecionada =
+                                3
                         }
                     )
                 }
             }
         },
+
+        // =========================================================
+        // ADICIONAR
+        // =========================================================
 
         confirmButton = {
 
@@ -883,32 +1569,55 @@ private fun NovoProdutoDialog(
 
                     val precoNumerico =
                         preco
-                            .replace(",", ".")
+                            .replace(
+                                ",",
+                                "."
+                            )
                             .toDoubleOrNull()
 
+                    erroNome =
+                        nome.isBlank()
+
+                    erroDescricao =
+                        descricao.isBlank()
+
+                    erroPreco =
+                        preco.isBlank() ||
+                                precoNumerico == null ||
+                                precoNumerico <= 0
+
                     if (
-                        nome.isNotBlank() &&
-                        descricao.isNotBlank() &&
+                        !erroNome &&
+                        !erroDescricao &&
+                        !erroPreco &&
                         precoNumerico != null
                     ) {
 
                         onAdicionar(
                             nome.trim(),
+
                             descricao.trim(),
+
                             precoNumerico,
+
                             categoriaSelecionada
                         )
                     }
                 },
 
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MytosPurple
-                )
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor =
+                            MytosPurple
+                    )
             ) {
 
                 Text(
-                    text = "Adicionar",
-                    fontWeight = FontWeight.Bold
+                    text =
+                        "Adicionar",
+
+                    fontWeight =
+                        FontWeight.Bold
                 )
             }
         },
@@ -916,18 +1625,633 @@ private fun NovoProdutoDialog(
         dismissButton = {
 
             TextButton(
-                onClick = onDismiss
+                onClick =
+                    onDismiss
             ) {
 
                 Text(
-                    text = "Cancelar",
-                    color = MytosPurple
+                    text =
+                        "Cancelar",
+
+                    color =
+                        MytosPurple
                 )
             }
         },
 
-        containerColor = Color.White,
-        shape = RoundedCornerShape(28.dp)
+        containerColor =
+            Color.White,
+
+        shape =
+            RoundedCornerShape(28.dp)
+    )
+}
+
+
+// =============================================================
+// DIALOGO — EDITAR PRODUTO
+// =============================================================
+
+@Composable
+private fun EditarProdutoDialog(
+    produto: Produto,
+    onDismiss: () -> Unit,
+    onSalvar: (Produto) -> Unit
+) {
+
+    var nome by remember(
+        produto.id
+    ) {
+        mutableStateOf(
+            produto.nome
+        )
+    }
+
+    var descricao by remember(
+        produto.id
+    ) {
+        mutableStateOf(
+            produto.descricao
+        )
+    }
+
+    var preco by remember(
+        produto.id
+    ) {
+        mutableStateOf(
+            produto.preco
+                .toString()
+                .replace(
+                    ".",
+                    ","
+                )
+        )
+    }
+
+    var categoriaSelecionada by remember(
+        produto.id
+    ) {
+        mutableStateOf(
+            produto.categoriaId
+        )
+    }
+
+    var erroNome by remember {
+        mutableStateOf(false)
+    }
+
+    var erroDescricao by remember {
+        mutableStateOf(false)
+    }
+
+    var erroPreco by remember {
+        mutableStateOf(false)
+    }
+
+    val focusManager =
+        LocalFocusManager.current
+
+    AlertDialog(
+        onDismissRequest =
+            onDismiss,
+
+        title = {
+
+            Text(
+                text =
+                    "Editar produto",
+
+                color =
+                    MytosPurpleDark,
+
+                fontWeight =
+                    FontWeight.ExtraBold
+            )
+        },
+
+        text = {
+
+            Column {
+
+                // =================================================
+                // NOME
+                // =================================================
+
+                OutlinedTextField(
+                    value =
+                        nome,
+
+                    onValueChange = {
+
+                        nome = it
+
+                        erroNome = false
+                    },
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
+                    singleLine = true,
+
+                    label = {
+                        Text(
+                            text =
+                                "Nome do produto"
+                        )
+                    },
+
+                    isError =
+                        erroNome,
+
+                    supportingText = {
+
+                        if (erroNome) {
+
+                            Text(
+                                text =
+                                    "Digite o nome do produto.",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
+                )
+
+                Spacer(
+                    modifier =
+                        Modifier.height(10.dp)
+                )
+
+                // =================================================
+                // DESCRIÇÃO
+                // =================================================
+
+                OutlinedTextField(
+                    value =
+                        descricao,
+
+                    onValueChange = {
+
+                        descricao = it
+
+                        erroDescricao = false
+                    },
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
+                    singleLine = true,
+
+                    label = {
+                        Text(
+                            text =
+                                "Descrição"
+                        )
+                    },
+
+                    isError =
+                        erroDescricao,
+
+                    supportingText = {
+
+                        if (erroDescricao) {
+
+                            Text(
+                                text =
+                                    "Digite uma descrição.",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
+                )
+
+                Spacer(
+                    modifier =
+                        Modifier.height(10.dp)
+                )
+
+                // =================================================
+                // PREÇO
+                // =================================================
+
+                OutlinedTextField(
+                    value =
+                        preco,
+
+                    onValueChange = { novoValor ->
+
+                        preco =
+                            novoValor.filter {
+
+                                it.isDigit() ||
+                                        it == ',' ||
+                                        it == '.'
+                            }
+
+                        erroPreco = false
+                    },
+
+                    modifier =
+                        Modifier.fillMaxWidth(),
+
+                    singleLine = true,
+
+                    label = {
+                        Text(
+                            text =
+                                "Preço"
+                        )
+                    },
+
+                    isError =
+                        erroPreco,
+
+                    supportingText = {
+
+                        if (erroPreco) {
+
+                            Text(
+                                text =
+                                    "Digite um preço válido. Ex.: 14,90",
+
+                                color =
+                                    Color(
+                                        0xFFD94C59
+                                    )
+                            )
+                        }
+                    },
+
+                    colors =
+                        OutlinedTextFieldDefaults.colors(
+
+                            focusedTextColor =
+                                MytosText,
+
+                            unfocusedTextColor =
+                                MytosText,
+
+                            errorTextColor =
+                                MytosText,
+
+                            focusedLabelColor =
+                                MytosText,
+
+                            unfocusedLabelColor =
+                                MytosText,
+
+                            errorLabelColor =
+                                MytosText,
+
+                            cursorColor =
+                                MytosPurple,
+
+                            focusedBorderColor =
+                                MytosPurple,
+
+                            unfocusedBorderColor =
+                                MytosLilac,
+
+                            errorBorderColor =
+                                Color(
+                                    0xFFD94C59
+                                ),
+
+                            focusedContainerColor =
+                                Color.White,
+
+                            unfocusedContainerColor =
+                                Color.White,
+
+                            errorContainerColor =
+                                Color.White
+                        ),
+
+                    keyboardOptions =
+                        KeyboardOptions(
+                            keyboardType =
+                                KeyboardType.Decimal,
+
+                            imeAction =
+                                ImeAction.Done
+                        ),
+
+                    keyboardActions =
+                        KeyboardActions(
+                            onDone = {
+                                focusManager
+                                    .clearFocus()
+                            }
+                        )
+                )
+
+                Spacer(
+                    modifier =
+                        Modifier.height(16.dp)
+                )
+
+                // =================================================
+                // CATEGORIA
+                // =================================================
+
+                Text(
+                    text =
+                        "Categoria",
+
+                    color =
+                        MytosPurpleDark,
+
+                    fontSize = 13.sp,
+
+                    fontWeight =
+                        FontWeight.Bold
+                )
+
+                Spacer(
+                    modifier =
+                        Modifier.height(8.dp)
+                )
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(
+                            rememberScrollState()
+                        ),
+
+                    horizontalArrangement =
+                        Arrangement.spacedBy(7.dp)
+                ) {
+
+                    CategoriaDialogButton(
+                        nome =
+                            "Bebidas",
+
+                        selecionada =
+                            categoriaSelecionada ==
+                                    1,
+
+                        onClick = {
+                            categoriaSelecionada =
+                                1
+                        }
+                    )
+
+                    CategoriaDialogButton(
+                        nome =
+                            "Doces",
+
+                        selecionada =
+                            categoriaSelecionada ==
+                                    2,
+
+                        onClick = {
+                            categoriaSelecionada =
+                                2
+                        }
+                    )
+
+                    CategoriaDialogButton(
+                        nome =
+                            "Salgados",
+
+                        selecionada =
+                            categoriaSelecionada ==
+                                    3,
+
+                        onClick = {
+                            categoriaSelecionada =
+                                3
+                        }
+                    )
+                }
+            }
+        },
+
+        // =========================================================
+        // SALVAR
+        // =========================================================
+
+        confirmButton = {
+
+            Button(
+                onClick = {
+
+                    val precoNumerico =
+                        preco
+                            .replace(
+                                ",",
+                                "."
+                            )
+                            .toDoubleOrNull()
+
+                    erroNome =
+                        nome.isBlank()
+
+                    erroDescricao =
+                        descricao.isBlank()
+
+                    erroPreco =
+                        preco.isBlank() ||
+                                precoNumerico == null ||
+                                precoNumerico <= 0
+
+                    if (
+                        !erroNome &&
+                        !erroDescricao &&
+                        !erroPreco &&
+                        precoNumerico != null
+                    ) {
+
+                        onSalvar(
+                            Produto(
+                                id =
+                                    produto.id,
+
+                                nome =
+                                    nome.trim(),
+
+                                descricao =
+                                    descricao.trim(),
+
+                                preco =
+                                    precoNumerico,
+
+                                categoriaId =
+                                    categoriaSelecionada
+                            )
+                        )
+                    }
+                },
+
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor =
+                            MytosPurple
+                    )
+            ) {
+
+                Text(
+                    text =
+                        "Salvar",
+
+                    fontWeight =
+                        FontWeight.Bold
+                )
+            }
+        },
+
+        // =========================================================
+        // CANCELAR
+        // =========================================================
+
+        dismissButton = {
+
+            TextButton(
+                onClick =
+                    onDismiss
+            ) {
+
+                Text(
+                    text =
+                        "Cancelar",
+
+                    color =
+                        MytosPurple
+                )
+            }
+        },
+
+        containerColor =
+            Color.White,
+
+        shape =
+            RoundedCornerShape(28.dp)
     )
 }
 
@@ -944,19 +2268,25 @@ private fun CategoriaDialogButton(
 ) {
 
     Text(
-        text = nome,
+        text =
+            nome,
 
-        color = if (selecionada) {
-            Color.White
-        } else {
-            MytosPurple
-        },
+        color =
+            if (selecionada) {
+                Color.White
+            } else {
+                MytosPurple
+            },
 
         fontSize = 11.sp,
-        fontWeight = FontWeight.Bold,
+
+        fontWeight =
+            FontWeight.Bold,
 
         modifier = Modifier
-            .clip(CircleShape)
+            .clip(
+                CircleShape
+            )
             .background(
                 if (selecionada) {
                     MytosPurple

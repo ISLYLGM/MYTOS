@@ -15,11 +15,13 @@ import com.example.mytos.screens.cadastro.CadastroScreen
 import com.example.mytos.screens.cardapio.CardapioScreen
 import com.example.mytos.screens.home.HomeScreen
 import com.example.mytos.screens.login.LoginScreen
+import com.example.mytos.screens.pedidos.PedidoDetalhesScreen
+import com.example.mytos.screens.pedidos.PedidosScreen
 import com.example.mytos.screens.perfil.PerfilScreen
 import com.example.mytos.screens.produto.ProdutoDetalhesScreen
+import com.example.mytos.screens.sacola.SacolaScreen
 import com.example.mytos.screens.splash.SplashScreen
 import com.example.mytos.ui.theme.MytosTheme
-
 
 class MainActivity : ComponentActivity() {
 
@@ -52,7 +54,9 @@ fun MytosApp() {
 
             SplashScreen(
                 onFinished = {
+
                     navController.navigate(Rotas.Login) {
+
                         popUpTo(Rotas.Splash) {
                             inclusive = true
                         }
@@ -69,12 +73,15 @@ fun MytosApp() {
 
             LoginScreen(
                 onLogin = {
+
                     navController.navigate(Rotas.Home) {
+
                         popUpTo(Rotas.Login) {
                             inclusive = true
                         }
                     }
                 },
+
                 onCadastro = {
                     navController.navigate(Rotas.Cadastro)
                 }
@@ -82,19 +89,22 @@ fun MytosApp() {
         }
 
         // =========================
-        // CADASTRO vai
+        // CADASTRO
         // =========================
 
         composable(Rotas.Cadastro) {
 
             CadastroScreen(
                 onCadastroConcluido = {
+
                     navController.navigate(Rotas.Acessibilidade) {
+
                         popUpTo(Rotas.Cadastro) {
                             inclusive = true
                         }
                     }
                 },
+
                 onVoltarLogin = {
                     navController.popBackStack()
                 }
@@ -109,7 +119,9 @@ fun MytosApp() {
 
             AcessibilidadeScreen(
                 onContinuar = {
+
                     navController.navigate(Rotas.Home) {
+
                         popUpTo(Rotas.Acessibilidade) {
                             inclusive = true
                         }
@@ -141,16 +153,34 @@ fun MytosApp() {
         }
 
         // =========================
+        // SACOLA
+        // =========================
+
+        composable(Rotas.Sacola) {
+
+            SacolaScreen(
+                navController = navController,
+
+                onNavegarParaMeusPedidos = {
+
+                    navController.navigate(Rotas.Pedidos)
+                }
+            )
+        }
+
+        // =========================
         // DETALHES DO PRODUTO
         // =========================
 
         composable(
             route = Rotas.ProdutoDetalhes,
+
             arguments = listOf(
                 navArgument("produtoId") {
                     type = NavType.IntType
                 }
             )
+
         ) { backStackEntry ->
 
             val produtoId =
@@ -174,6 +204,44 @@ fun MytosApp() {
             PerfilScreen(
                 navController = navController
             )
+        }
+
+        // =========================
+        // MEUS PEDIDOS
+        // =========================
+
+        composable(Rotas.Pedidos) {
+
+            PedidosScreen(
+                navController = navController
+            )
+        }
+
+        // =========================
+        // DETALHES DO PEDIDO
+        // =========================
+
+        composable(
+            route = Rotas.PedidoDetalhes,
+
+            arguments = listOf(
+                navArgument("pedidoId") {
+                    type = NavType.StringType
+                }
+            )
+
+        ) { backStackEntry ->
+
+            val pedidoId =
+                backStackEntry.arguments?.getString("pedidoId")
+
+            if (pedidoId != null) {
+
+                PedidoDetalhesScreen(
+                    navController = navController,
+                    pedidoId = pedidoId
+                )
+            }
         }
     }
 }
