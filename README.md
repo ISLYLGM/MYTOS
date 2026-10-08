@@ -1,162 +1,200 @@
 # ☕ MYTOS — Café, sabor e lendas
 
-O **MYTOS** é um aplicativo de café inspirado em diferentes mitologias do mundo, desenvolvido como projeto acadêmico utilizando **Kotlin e Jetpack Compose**.
+O **MYTOS** é um aplicativo de café inspirado em mitologias de diferentes culturas, desenvolvido em **Kotlin** com **Jetpack Compose**.
 
-A proposta é unir café, mitologia e tecnologia em uma experiência digital simples, interativa e acessível para toda a família.
-
----
-
-## 📱 Sobre o projeto
-
-O MYTOS começou como um projeto voltado para uma experiência de café com uma identidade visual inspirada em mitologias.
-
-Ao longo do desenvolvimento, o projeto evoluiu para uma proposta mais amigável, colorida e acessível, com personagens próprios e uma experiência de navegação mais completa.
-
-O aplicativo permite que o usuário:
-
-- realizar cadastro e login;
-- acessar a tela de acessibilidade;
-- visualizar o cardápio;
-- adicionar produtos;
-- editar produtos;
-- excluir produtos;
-- visualizar detalhes dos produtos;
-- adicionar produtos à sacola;
-- alterar quantidades;
-- visualizar o valor total da compra;
-- finalizar pedidos;
-- consultar pedidos realizados;
-- visualizar os detalhes de cada pedido;
-- acessar e editar informações do perfil.
+O projeto foi desenvolvido como parte de um trabalho acadêmico, com foco em navegação, interação com o usuário, organização de dados e acessibilidade.
 
 ---
 
-## 🎨 Identidade do MYTOS
+## 🌟 Sobre o projeto
 
-A identidade visual do aplicativo utiliza principalmente tons de:
+O MYTOS busca transformar a experiência de um café tradicional em uma experiência temática, utilizando produtos inspirados em personagens e elementos de diferentes mitologias.
 
-- 💜 Roxo
-- 🤍 Branco
-- 💛 Amarelo claro
-- 💚 Verde como cor de apoio
-
-O projeto também possui três personagens que representam diferentes culturas e mitologias:
-
-- 🐺 **Iago** — lobo-guará brasileiro
-- 🐈 **Bast** — gata inspirada na cultura egípcia
-- 🦊 **Mika** — kitsune japonesa
-
-Os personagens fazem parte da identidade do MYTOS e ajudam a tornar a experiência mais amigável e reconhecível.
+A identidade visual do aplicativo utiliza principalmente tons de **roxo, branco e amarelo claro**, combinando uma proposta moderna, acolhedora e divertida.
 
 ---
 
-## 📲 Telas do aplicativo
+## 🐺 Mascotes
 
-O aplicativo possui diferentes telas conectadas por navegação:
+O aplicativo possui três mascotes que representam diferentes culturas:
 
-1. Splash
-2. Login
-3. Cadastro
-4. Acessibilidade
-5. Home
-6. Cardápio
-7. Detalhes do Produto
-8. Sacola
-9. Perfil
-10. Meus Pedidos
-11. Detalhes do Pedido
+- **Iago** — lobo-guará brasileiro 🇧🇷
+- **Bast** — gata egípcia 🇪🇬
+- **Mika** — kitsune japonesa 🇯🇵
 
-A navegação principal é realizada por uma **Bottom Navigation**, contendo:
-
-- 🏠 Home
-- ☕ Cardápio
-- 🛍 Sacola
-- 👤 Perfil
+Os mascotes fazem parte da identidade visual do MYTOS e ajudam a tornar a experiência mais amigável e acessível.
 
 ---
 
-## 🛒 Funcionamento do aplicativo
+## 📱 Telas do aplicativo
 
-### Cardápio
+O MYTOS possui diversas telas navegáveis:
 
-O usuário pode visualizar os produtos disponíveis e filtrar os itens por categoria.
-
-As categorias utilizadas são:
-
-- Bebidas
-- Doces
-- Salgados
-
-Também é possível adicionar novos produtos.
-
-Cada produto pode ser:
-
-- adicionado;
-- editado;
-- excluído;
-- aberto para visualização de detalhes.
+- Splash
+- Login
+- Cadastro
+- Acessibilidade
+- Home
+- Cardápio
+- Detalhes do produto
+- Sacola
+- Perfil
+- Meus Pedidos
+- Detalhes do pedido
 
 ---
 
-### 🛍 Sacola
+## 🍰 Cardápio
 
-Os produtos selecionados são armazenados na sacola.
+O cardápio apresenta produtos inspirados em diferentes mitologias.
+
+Atualmente, alguns exemplos são:
+
+- **Café de Apolo** — R$ 14,90
+- **Néctar de Poseidon** — R$ 16,90
+- **Torta de Hera** — R$ 18,90
+- **Chá de Kitsune** — R$ 13,90
 
 O usuário pode:
 
-- aumentar a quantidade;
-- diminuir a quantidade;
-- remover produtos;
-- visualizar o subtotal;
+- visualizar os produtos;
+- filtrar por categoria;
+- adicionar novos produtos;
+- editar produtos;
+- excluir produtos;
+- acessar os detalhes de cada produto.
+
+---
+
+## 🛍️ Sacola
+
+A sacola permite adicionar produtos e controlar suas quantidades.
+
+O usuário pode:
+
+- adicionar produtos;
+- aumentar ou diminuir quantidades;
+- visualizar o subtotal de cada produto;
 - visualizar o valor total;
 - finalizar o pedido.
 
 ---
 
-### 📦 Pedidos
+## 📦 Meus Pedidos
 
-Após finalizar uma compra, um novo pedido é criado e armazenado na lista de pedidos.
+A tela de **Meus Pedidos** permite gerenciar os pedidos durante a execução do aplicativo.
 
-O usuário pode acessar **Meus Pedidos** e visualizar:
+O usuário pode:
 
-- número do pedido;
-- data e horário;
-- quantidade de itens;
-- valor total.
-
-Ao selecionar um pedido, é aberta uma tela de detalhes contendo os produtos daquele pedido, suas quantidades, preços unitários, subtotais e o valor total.
+- adicionar novos pedidos;
+- editar pedidos;
+- excluir pedidos;
+- visualizar os detalhes de cada pedido;
+- consultar quantidade de itens;
+- visualizar os valores;
+- visualizar o total calculado.
 
 ---
 
-## 🧩 Estrutura do projeto
+## 🧩 Modelagem de dados
 
-O código foi organizado em diferentes pacotes para facilitar a manutenção e separar as responsabilidades.
+O projeto utiliza diferentes `data class` para representar os dados principais do aplicativo:
+
+### Produto
+
+Representa os produtos disponíveis no cardápio.
+
+### ItemSacola
+
+Representa um produto dentro da sacola e sua quantidade, calculando automaticamente o subtotal.
+
+### Pedido
+
+Representa um pedido realizado, contendo seus itens, valor total e data.
+
+---
+
+## 📋 Listas e gerenciamento de dados
+
+As informações são armazenadas em memória utilizando `mutableStateListOf`.
+
+O projeto possui listas para:
+
+- produtos;
+- itens da sacola;
+- pedidos.
+
+As listas são exibidas utilizando componentes como `LazyColumn` e `Card`.
+
+---
+
+## 🧭 Navegação
+
+A navegação do aplicativo é realizada utilizando:
+
+- `NavController`
+- `NavHost`
+- rotas com argumentos
+- `navigate()`
+- `popBackStack()`
+
+O aplicativo também possui uma **BottomNavigation** para facilitar o acesso às principais áreas:
+
+- Home
+- Cardápio
+- Sacola
+- Perfil
+
+Além disso, as telas de detalhes recebem o identificador do item selecionado para apresentar os dados correspondentes.
+
+---
+
+## ♿ Acessibilidade
+
+O projeto possui uma área dedicada à acessibilidade, incluindo suporte e orientação para utilização do aplicativo com **TalkBack**.
+
+A acessibilidade foi considerada como parte da experiência do usuário e da organização das telas.
+
+---
+
+## ✅ Validações
+
+Foram implementadas validações nos formulários para evitar o cadastro de informações inválidas ou vazias.
+
+Entre os exemplos estão:
+
+- campos obrigatórios;
+- quantidade válida;
+- valores não vazios;
+- número do cartão somente com números;
+- nome do titular utilizando letras e espaços;
+- validade do cartão no formato `MM/AA`.
+
+O teclado também foi configurado para melhorar a interação com os campos de entrada.
+
+---
+
+## 🛠️ Tecnologias utilizadas
+
+- **Kotlin**
+- **Jetpack Compose**
+- **Material 3**
+- **Navigation Compose**
+- **Android Studio**
+- **Git e GitHub**
+
+---
+
+## 📂 Organização do projeto
+
+O projeto foi organizado em diferentes pacotes para facilitar a manutenção e compreensão do código:
 
 ```text
 com.example.mytos
-│
 ├── data
-│   ├── MythosData.kt
-│   └── SacolaData.kt
-│
 ├── model
-│   └── Produto.kt
-│
 ├── navigation
-│   └── Rotas.kt
-│
 ├── screens
-│   ├── splash
-│   ├── login
-│   ├── cadastro
-│   ├── acessibilidade
-│   ├── home
-│   ├── cardapio
-│   ├── produto
-│   ├── sacola
-│   ├── perfil
-│   └── pedidos
-│
 └── ui
     ├── components
     └── theme
