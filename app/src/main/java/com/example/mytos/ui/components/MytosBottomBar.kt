@@ -17,7 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosYellow
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 
 @Composable
 fun MytosBottomBar(

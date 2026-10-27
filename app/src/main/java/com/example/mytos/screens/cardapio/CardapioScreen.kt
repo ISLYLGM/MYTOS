@@ -42,7 +42,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.data.MytosDatabase
 import com.example.mytos.data.ProdutoEntity
 import com.example.mytos.data.toProduto
@@ -408,7 +408,7 @@ fun CardapioScreen(navController: NavController) {
                             scope.launch {
                                 try {
                                     withContext(Dispatchers.IO) {
-                                        produtoDao.excluir(produto.id.toLong())
+                                        produtoDao.excluirPorId(produto.id.toLong())
                                     }
                                 } catch (e: Exception) {
                                     Log.e(
@@ -617,7 +617,7 @@ private fun ProdutoCardMytos(
                 Spacer(Modifier.height(7.dp))
                 Text(
                     String.format(
-                        Locale("pt", "BR"),
+                        Locale.Builder().setLanguage("pt").setRegion("BR").build(),
                         "R$ %.2f",
                         produto.preco
                     ),
@@ -649,7 +649,7 @@ private fun ProdutoCardMytos(
 }
 
 @Composable
-private fun CoresCamposProduto() = OutlinedTextFieldDefaults.colors(
+private fun coresCamposProduto() = OutlinedTextFieldDefaults.colors(
     focusedTextColor = Color.White,
     unfocusedTextColor = Color.White,
     disabledTextColor = Color.White.copy(alpha = 0.6f),
@@ -745,7 +745,7 @@ private fun NovoProdutoDialog(
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 
@@ -761,7 +761,7 @@ private fun NovoProdutoDialog(
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 
@@ -783,7 +783,7 @@ private fun NovoProdutoDialog(
                     keyboardActions = KeyboardActions(
                         onDone = { focusManager.clearFocus() }
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 
@@ -889,7 +889,7 @@ private fun EditarProdutoDialog(
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 
@@ -905,7 +905,7 @@ private fun EditarProdutoDialog(
                     keyboardOptions = KeyboardOptions(
                         imeAction = ImeAction.Next
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 
@@ -927,7 +927,7 @@ private fun EditarProdutoDialog(
                     keyboardActions = KeyboardActions(
                         onDone = { focusManager.clearFocus() }
                     ),
-                    colors = CoresCamposProduto(),
+                    colors = coresCamposProduto(),
                     shape = RoundedCornerShape(12.dp)
                 )
 

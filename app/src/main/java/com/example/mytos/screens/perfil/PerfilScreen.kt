@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ListAlt
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -51,7 +50,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.data.AcessibilidadeConfig
 import com.example.mytos.data.AuthRepository
 import com.example.mytos.ui.components.MytosBottomBar
@@ -60,6 +59,7 @@ import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosPurpleDark
 import com.example.mytos.ui.theme.MytosText
 import kotlinx.coroutines.launch
+import androidx.compose.material.icons.automirrored.filled.Logout
 
 @Composable
 fun PerfilScreen(
@@ -98,7 +98,7 @@ fun PerfilScreen(
             } else {
                 erroPerfil = "Sua sessão expirou. Entre novamente."
             }
-        } catch (e: Exception) {
+        } catch (_: Exception)  {
             erroPerfil = "Não foi possível carregar seu perfil."
         } finally {
             carregando = false
@@ -351,7 +351,7 @@ fun PerfilScreen(
                                         } catch (e: IllegalArgumentException) {
                                             erroPerfil = e.message
                                                 ?: "Verifique os dados informados."
-                                        } catch (e: Exception) {
+                                        } catch (_: Exception) {
                                             erroPerfil =
                                                 "Não foi possível salvar as alterações."
                                         } finally {
@@ -539,7 +539,7 @@ fun PerfilScreen(
                 )
             ) {
                 Icon(
-                    imageVector = Icons.Default.Logout,
+                    imageVector = Icons.AutoMirrored.Filled.Logout,
                     contentDescription = null
                 )
 

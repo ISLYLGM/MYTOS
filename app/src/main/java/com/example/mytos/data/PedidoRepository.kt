@@ -171,7 +171,7 @@ class PedidoRepository(
             return
         }
 
-        pedidoDao.excluirPedido(id)
+        pedidoDao.deletarPedido(id)
     }
 
     private fun converterParaCentavos(

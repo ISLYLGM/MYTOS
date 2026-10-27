@@ -1,9 +1,9 @@
 package com.example.mytos.data
 
 import android.content.Context
-import androidx.room3.Database
-import androidx.room3.Room
-import androidx.room3.RoomDatabase
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 
 @Database(
     entities = [
@@ -18,9 +18,7 @@ import androidx.room3.RoomDatabase
 abstract class MytosDatabase : RoomDatabase() {
 
     abstract fun usuarioDao(): UsuarioDao
-
     abstract fun produtoDao(): ProdutoDao
-
     abstract fun pedidoDao(): PedidoDao
 
     companion object {

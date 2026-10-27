@@ -1,6 +1,7 @@
 package com.example.mytos.data
 
 import android.content.Context
+import androidx.core.content.edit
 
 class SessaoManager(context: Context) {
 
@@ -10,9 +11,9 @@ class SessaoManager(context: Context) {
     )
 
     fun salvarUsuarioLogado(usuarioId: Long) {
-        preferencias.edit()
-            .putLong(CHAVE_USUARIO_ID, usuarioId)
-            .apply()
+        preferencias.edit {
+            putLong(CHAVE_USUARIO_ID, usuarioId)
+        }
     }
 
     fun obterUsuarioLogado(): Long? {
@@ -21,9 +22,9 @@ class SessaoManager(context: Context) {
     }
 
     fun encerrarSessao() {
-        preferencias.edit()
-            .remove(CHAVE_USUARIO_ID)
-            .apply()
+        preferencias.edit {
+            remove(CHAVE_USUARIO_ID)
+        }
     }
 
     companion object {

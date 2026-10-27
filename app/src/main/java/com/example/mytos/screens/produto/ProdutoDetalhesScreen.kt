@@ -37,6 +37,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,7 +51,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.data.MytosDatabase
 import com.example.mytos.data.SacolaData
 import com.example.mytos.data.toProduto
@@ -82,7 +83,7 @@ fun ProdutoDetalhesScreen(
 
     var produto by remember { mutableStateOf<Produto?>(null) }
     var carregando by remember { mutableStateOf(true) }
-    var quantidade by remember { mutableStateOf(1) }
+    var quantidade by remember { mutableIntStateOf(1) }
     var adicionado by remember { mutableStateOf(false) }
 
     // Busca o produto DIRETO NO BANCO pelo id recebido na rota
@@ -420,4 +421,4 @@ fun ProdutoDetalhesScreen(
 }
 
 private fun moeda(valor: Double): String =
-    String.format(Locale("pt", "BR"), "R$ %.2f", valor)
+    String.format(Locale.forLanguageTag("pt-BR"), "R$ %.2f", valor)

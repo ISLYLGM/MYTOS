@@ -1,13 +1,15 @@
 package com.example.mytos.data
 
-import androidx.room3.Dao
-import androidx.room3.Insert
-import androidx.room3.OnConflictStrategy
-import androidx.room3.Query
-import androidx.room3.Transaction
-import androidx.room3.Update
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
+@Suppress("Unused")
 @Dao
 interface UsuarioDao {
 
@@ -17,13 +19,16 @@ interface UsuarioDao {
     @Update
     suspend fun atualizar(usuario: UsuarioEntity)
 
+    @Delete
+    suspend fun deletar(usuario: UsuarioEntity)
+
     @Query("SELECT * FROM usuarios WHERE email = :email LIMIT 1")
     suspend fun buscarPorEmail(email: String): UsuarioEntity?
 
     @Query("SELECT * FROM usuarios WHERE id = :usuarioId LIMIT 1")
     suspend fun buscarPorId(usuarioId: Long): UsuarioEntity?
 }
-
+@Suppress("Unused")
 @Dao
 interface ProdutoDao {
 
@@ -35,6 +40,9 @@ interface ProdutoDao {
 
     @Update
     suspend fun atualizar(produto: ProdutoEntity)
+
+    @Delete
+    suspend fun deletar(produto: ProdutoEntity)
 
     @Query("SELECT * FROM produtos ORDER BY nome ASC")
     fun observarTodos(): Flow<List<ProdutoEntity>>
@@ -49,12 +57,12 @@ interface ProdutoDao {
     suspend fun contarProdutos(): Int
 
     @Query("DELETE FROM produtos WHERE id = :produtoId")
-    suspend fun excluir(produtoId: Long)
+    suspend fun excluirPorId(produtoId: Long)
 
     @Query("DELETE FROM produtos")
     suspend fun excluirTodos()
 }
-
+@Suppress("Unused")
 @Dao
 abstract class PedidoDao {
 
@@ -66,6 +74,9 @@ abstract class PedidoDao {
 
     @Update
     abstract suspend fun atualizarPedido(pedido: PedidoEntity)
+
+    @Delete
+    abstract suspend fun deletarPedido(pedido: Long)
 
     @Query("SELECT * FROM pedidos WHERE usuarioId = :usuarioId ORDER BY dataCriacao DESC")
     abstract fun observarPedidosDoUsuario(usuarioId: Long): Flow<List<PedidoEntity>>
@@ -80,7 +91,7 @@ abstract class PedidoDao {
     abstract suspend fun excluirItensDoPedido(pedidoId: Long)
 
     @Query("DELETE FROM pedidos WHERE id = :pedidoId")
-    abstract suspend fun excluirPedido(pedidoId: Long)
+    abstract suspend fun excluirPedidoPorId(pedidoId: Long)
 
     @Transaction
     open suspend fun inserirPedidoCompleto(

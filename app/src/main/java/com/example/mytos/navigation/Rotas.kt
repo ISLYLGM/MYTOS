@@ -1,6 +1,6 @@
+package com.example.mytos.navigation
 
-package com.example.mytos
-
+@Suppress("ConstPropertyName")
 object Rotas {
     const val Splash = "splash"
     const val Login = "login"

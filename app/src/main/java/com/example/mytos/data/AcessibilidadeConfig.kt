@@ -5,6 +5,7 @@ import android.view.accessibility.AccessibilityManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 
 /**
  * Preferência "Leitura de tela" DENTRO do MYTOS.
@@ -31,9 +32,9 @@ object AcessibilidadeConfig {
     fun definir(context: Context, ativo: Boolean) {
         context.applicationContext
             .getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-            .edit()
-            .putBoolean(CHAVE_LEITOR, ativo)
-            .apply()
+            .edit {
+                putBoolean(CHAVE_LEITOR, ativo)
+            }
 
         leitorAtivo = ativo
     }

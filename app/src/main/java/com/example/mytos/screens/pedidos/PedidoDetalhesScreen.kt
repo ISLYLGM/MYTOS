@@ -182,7 +182,7 @@ fun PedidoDetalhesScreen(
                     Text(
                         text = SimpleDateFormat(
                             "dd/MM/yyyy • HH:mm",
-                            Locale("pt", "BR")
+                            Locale.forLanguageTag("pt-BR")
                         ).format(pedidoAtual.data),
                         color = MytosText.copy(alpha = 0.65f),
                         fontSize = 14.sp
@@ -279,4 +279,8 @@ fun PedidoDetalhesScreen(
 }
 
 private fun moeda(valor: Double): String =
-    String.format(Locale("pt", "BR"), "R$ %.2f", valor)
+    String.format(
+        Locale.Builder().setLanguage("pt").setRegion("BR").build(),
+        "R$ %.2f",
+        valor
+    )

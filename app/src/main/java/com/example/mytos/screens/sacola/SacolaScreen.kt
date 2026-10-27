@@ -38,18 +38,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.data.MytosDatabase
 import com.example.mytos.data.PedidoRepository
 import com.example.mytos.data.SacolaData
 import com.example.mytos.model.Pedido
 import com.example.mytos.ui.components.MytosBottomBar
 import com.example.mytos.ui.components.SacolaItemCard
-import com.example.mytos.ui.theme.MytosCream
 import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosPurpleDark
 import com.example.mytos.ui.theme.MytosText
-import com.example.mytos.ui.theme.MytosTextSecondary
 import com.example.mytos.ui.theme.MytosYellow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -348,4 +346,4 @@ fun SacolaScreen(
 }
 
 private fun formatarMoeda(valor: Double): String =
-    String.format(Locale("pt", "BR"), "R$ %.2f", valor)
+    String.format(Locale.forLanguageTag("pt-BR"), "R$ %.2f", valor)

@@ -21,6 +21,7 @@ import com.example.mytos.data.AuthRepository
 import com.example.mytos.data.MytosDatabase
 import com.example.mytos.data.SacolaData
 import com.example.mytos.data.SessaoManager
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.screens.acessibilidade.AcessibilidadeScreen
 import com.example.mytos.screens.cadastro.CadastroScreen
 import com.example.mytos.screens.cardapio.CardapioScreen

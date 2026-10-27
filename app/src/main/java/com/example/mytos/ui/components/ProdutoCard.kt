@@ -25,6 +25,7 @@ import com.example.mytos.ui.theme.MytosPurple
 import com.example.mytos.ui.theme.MytosText
 import java.util.Locale
 
+@Suppress("Unused")
 @Composable
 fun ProdutoCard(
     produto: Produto,
@@ -67,7 +68,7 @@ fun ProdutoCard(
 
                 Text(
                     text = String.format(
-                        Locale("pt", "BR"),
+                        Locale.Builder().setLanguage("pt").setRegion("BR").build(),
                         "R$ %.2f",
                         produto.preco
                     ),

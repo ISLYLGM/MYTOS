@@ -268,7 +268,7 @@ fun LoginScreen(
                             try {
                                 authRepository.entrar(email.trim(), senha)
                                 onLogin()
-                            } catch (e: Exception) {
+                            } catch (_: Exception) {
                                 erroLogin = "E-mail ou senha incorretos."
                             } finally {
                                 entrando = false

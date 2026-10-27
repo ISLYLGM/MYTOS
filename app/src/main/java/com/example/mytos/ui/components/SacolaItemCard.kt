@@ -54,13 +54,13 @@ fun SacolaItemCard(
                 )
 
                 Text(
-                    text = String.format(Locale("pt", "BR"), "R$ %.2f", produto.preco),
+                    text = String.format(Locale.forLanguageTag("pt-BR"), "Preço unitário: R$ %.2f", produto.preco),
                     color = MytosText.copy(alpha = 0.7f),
                     fontSize = 14.sp
                 )
 
                 Text(
-                    text = String.format(Locale("pt", "BR"), "Subtotal: R$ %.2f", itemSacola.subtotal),
+                    text = String.format(Locale.forLanguageTag("pt-BR"), "Subtotal: R$ %.2f", itemSacola.subtotal),
                     color = MytosPurple,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.SemiBold

@@ -183,7 +183,7 @@ fun CadastroScreen(
             )
 
             if (tentouCadastrar && !nomeValido) {
-                mensagemErro("Digite seu nome com pelo menos 3 caracteres.")
+                MensagemErro("Digite seu nome com pelo menos 3 caracteres.")
             }
 
             Spacer(Modifier.height(10.dp))
@@ -213,7 +213,7 @@ fun CadastroScreen(
             )
 
             if (tentouCadastrar && !emailValido) {
-                mensagemErro("Digite um e-mail válido.")
+                MensagemErro("Digite um e-mail válido.")
             }
 
             Spacer(Modifier.height(10.dp))
@@ -269,7 +269,7 @@ fun CadastroScreen(
             )
 
             if (tentouCadastrar && !senhaValida) {
-                mensagemErro("Use pelo menos 6 caracteres, uma letra e um número.")
+                MensagemErro("Use pelo menos 6 caracteres, uma letra e um número.")
             }
 
             Spacer(Modifier.height(10.dp))
@@ -325,7 +325,7 @@ fun CadastroScreen(
             )
 
             if (tentouCadastrar && !senhasIguais) {
-                mensagemErro("As senhas precisam ser iguais.")
+                MensagemErro("As senhas precisam ser iguais.")
             }
 
             erroCadastro?.let {
@@ -411,7 +411,7 @@ fun CadastroScreen(
 }
 
 @Composable
-private fun mensagemErro(mensagem: String) {
+private fun MensagemErro(mensagem: String) {
     Text(
         text = mensagem,
         color = Color(0xFFD94C59),

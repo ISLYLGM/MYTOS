@@ -50,7 +50,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.mytos.Rotas
+import com.example.mytos.navigation.Rotas
 import com.example.mytos.data.MytosDatabase
 import com.example.mytos.data.PedidoRepository
 import com.example.mytos.data.SacolaData
@@ -239,7 +239,7 @@ fun PedidosScreen(navController: NavController) {
                         val dataFormatada = remember(pedido.data) {
                             SimpleDateFormat(
                                 "dd/MM/yyyy • HH:mm",
-                                Locale("pt", "BR")
+                                Locale.forLanguageTag("pt-BR")
                             ).format(pedido.data)
                         }
 
@@ -291,7 +291,7 @@ fun PedidosScreen(navController: NavController) {
 
                                     Text(
                                         text = "R$ " + String.format(
-                                            Locale("pt", "BR"),
+                                            Locale.Builder().setLanguage("pt").setRegion("BR").build(),
                                             "%.2f",
                                             pedido.valorTotal
                                         ),
@@ -336,12 +336,11 @@ fun PedidosScreen(navController: NavController) {
 
                                         IconButton(
                                             onClick = {
-                                                val idUsuario = usuarioId
-                                                if (idUsuario != null) {
+                                                usuarioId.let { id ->
                                                     scope.launch {
                                                         try {
                                                             repository.excluirPedido(
-                                                                usuarioId = idUsuario,
+                                                                usuarioId = id,
                                                                 pedidoId = pedido.id
                                                             )
                                                         } catch (e: Exception) {
@@ -355,10 +354,8 @@ fun PedidosScreen(navController: NavController) {
                                             }
                                         ) {
                                             Icon(
-                                                imageVector =
-                                                    Icons.Default.Delete,
-                                                contentDescription =
-                                                    "Excluir pedido",
+                                                imageVector = Icons.Default.Delete,
+                                                contentDescription = "Excluir pedido",
                                                 tint = Color(0xFFD94C59)
                                             )
                                         }
@@ -380,8 +377,6 @@ fun PedidosScreen(navController: NavController) {
                 mostrarDialogoAdicionar = false
             },
             onSalvar = { nomeProduto, quantidade ->
-                val idUsuario = usuarioId
-
                 val produtoEncontrado = produtos.find {
                     it.nome.equals(
                         nomeProduto.trim(),
@@ -389,7 +384,7 @@ fun PedidosScreen(navController: NavController) {
                     )
                 }
 
-                if (idUsuario == null || produtoEncontrado == null) {
+                if (usuarioId == null || produtoEncontrado == null) {
                     false
                 } else {
                     val item = ItemSacola(
@@ -406,7 +401,7 @@ fun PedidosScreen(navController: NavController) {
                     scope.launch {
                         try {
                             repository.salvarPedido(
-                                usuarioId = idUsuario,
+                                usuarioId = usuarioId,
                                 pedido = novoPedido
                             )
                             mostrarDialogoAdicionar = false
@@ -434,7 +429,6 @@ fun PedidosScreen(navController: NavController) {
                 pedidoSelecionado = null
             },
             onSalvar = { nomeProduto, quantidade ->
-                val idUsuario = usuarioId
                 val pedidoAtual = pedidoSelecionado
 
                 val produtoEncontrado = produtos.find {
@@ -445,7 +439,7 @@ fun PedidosScreen(navController: NavController) {
                 }
 
                 if (
-                    idUsuario == null ||
+                    usuarioId == null ||
                     pedidoAtual == null ||
                     produtoEncontrado == null
                 ) {
@@ -464,7 +458,7 @@ fun PedidosScreen(navController: NavController) {
                     scope.launch {
                         try {
                             repository.salvarPedido(
-                                usuarioId = idUsuario,
+                                usuarioId = usuarioId,
                                 pedido = pedidoAtualizado
                             )
                             mostrarDialogoEditar = false
@@ -650,7 +644,7 @@ private fun PedidoFormDialog(
                     erroQuantidade = !quantidadeValida
 
                     if (produtoValido && quantidadeValida) {
-                        onSalvar(nomeProduto, quantidade!!)
+                        onSalvar(nomeProduto, quantidade)
                     }
                 },
                 colors = ButtonDefaults.buttonColors(

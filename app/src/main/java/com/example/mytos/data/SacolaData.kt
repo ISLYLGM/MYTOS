@@ -78,7 +78,7 @@ object SacolaData {
             }
         }
     }
-
+    @Suppress("Unused")
     fun removerProduto(produtoId: Int) {
         if (usuarioAtualId == null) return
         obterSacolaAtual().removeAll { it.produto.id == produtoId }
@@ -91,6 +91,7 @@ object SacolaData {
      * Quem salva é o PedidoRepository (Room), e só depois a sacola é limpa.
      * O id vazio faz o repositório criar um pedido novo.
      */
+    @Suppress("Unused")
     fun montarPedido(): Pedido? {
         val itens = obterSacolaAtual()
         if (itens.isEmpty()) return null
